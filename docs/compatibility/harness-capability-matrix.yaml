@@ -1,0 +1,184 @@
+schema_version: 1
+inventory: P0A
+research_date: "2026-10-20"
+classification_legend:
+  AVAILABLE_UNTESTED: "Documented or locally observed support; effective behavior was not demonstrated."
+  UNAVAILABLE: "Not present in the inspected local installation or otherwise unavailable within the stated scope."
+  ORGANIZATION_RESTRICTED: "A specific organization policy was directly observed to restrict the capability."
+  REQUIRES_PROTOTYPE: "Needs direct local/UI verification or a bounded prototype before its effective status can be established."
+  NOT_APPLICABLE: "Does not apply to the selected environment or this inventory."
+verified_claims: []
+environment:
+  os:
+    value: "Microsoft Windows 11 Enterprise, 10.0.22631, build 22631"
+    classification: AVAILABLE_UNTESTED
+    evidence: "Read-only Get-CimInstance Win32_OperatingSystem query; product sandbox prerequisites not tested."
+  vscode:
+    version: "1.142.0"
+    commit: "6d62b1d5dace93a33b3a6d3eca1317bd5e15bcb1"
+    architecture: x64
+    classification: AVAILABLE_UNTESTED
+    evidence: "code --version reports this CLI installation; active VS Code window may differ."
+  github_copilot_extension:
+    version: null
+    classification: UNAVAILABLE
+    evidence: "GitHub.copilot and GitHub.copilot-chat were absent from code --list-extensions --show-versions; do not infer the active session's extension inventory."
+  azure_github_copilot_extension:
+    version: "1.0.244"
+    classification: NOT_APPLICABLE
+    evidence: "ms-azuretools.vscode-azure-github-copilot is a separately named Azure extension, not the GitHub Copilot Chat extension."
+session_target:
+  selected: null
+  candidate: Copilot
+  classification: REQUIRES_PROTOTYPE
+  evidence: "Active target not visible to read-only CLI inspection; user UI confirmation required. Current product context alone does not establish the VS Code target."
+capabilities:
+  - id: custom_agents
+    classification: AVAILABLE_UNTESTED
+    scope: "VS Code documents workspace .github/agents/ (.agent.md or .md) and Copilot user %USERPROFILE%\\.copilot\\agents/ (.agent.md or .md); supported frontmatter includes name, description, argument-hint, tools, agents, model, handoffs, hooks, and invocation controls, subject to harness support."
+    local_observation: "No workspace .github/agents/ found."
+    sources:
+      - "https://code.visualstudio.com/docs/agent-customization/custom-agents"
+      - "https://code.visualstudio.com/docs/agents/reference/custom-agent-file-reference"
+      - "https://docs.github.com/en/copilot/concepts/agents/copilot-cli/about-custom-agents"
+  - id: explicit_tool_lists
+    classification: AVAILABLE_UNTESTED
+    scope: "Explicit tools can be listed in custom-agent frontmatter; the Tools UI manages enabled tools. The Copilot harness has access to enabled client-side tools by default, subject to session/harness limitations."
+    local_observation: "No custom agent files; effective available tools not enumerated."
+    sources:
+      - "https://code.visualstudio.com/docs/agents/run/tools"
+      - "https://code.visualstudio.com/docs/agents/reference/custom-agent-file-reference"
+  - id: automatic_tool_invocation_controls
+    classification: AVAILABLE_UNTESTED
+    scope: "Approval/permission settings, per-tool auto-approval eligibility, terminal/URL approvals, and Autopilot/Allow all modes control confirmations. These controls do not establish a blanket prohibition on model tool invocation."
+    local_observation: "chat.agent.enabled=true; effective approval mode and managed defaults not inspected."
+    sources:
+      - "https://code.visualstudio.com/docs/agents/run/approvals"
+  - id: hooks_implementation
+    classification: AVAILABLE_UNTESTED
+    scope: "Hook behavior depends on product surface: VS Code local agent sessions, Copilot CLI connected to VS Code, Copilot cloud agent, Copilot Shared harness, or another Session Target. Documented hook support does not establish equivalent events, payloads, execution environments, or coverage across surfaces. VS Code hook experience is Preview."
+    local_observation: "chat.useHooks=true; no workspace hook files; execution not tested."
+    sources:
+      - "https://code.visualstudio.com/docs/agent-customization/hooks"
+      - "https://docs.github.com/en/copilot/concepts/agents/hooks"
+      - "https://docs.github.com/en/copilot/reference/hooks-reference"
+  - id: hook_locations_and_events
+    classification: REQUIRES_PROTOTYPE
+    scope: "Repository hooks are documented at .github/hooks/*.json; Copilot CLI can additionally load hooks from policy-, user-, repository-, settings-, and plugin-level sources. Supported events and execution environments differ by Copilot surface. VS Code Local and Copilot CLI event references must not be treated as interchangeable; confirm the exact target's event, payload, execution, and platform requirements before implementation."
+    local_observation: "No workspace hook directory; user hooks and event execution not inspected. Active Session Target and P0 prototype target surface are unresolved; no P0B handler may be written until explicitly selected."
+    sources:
+      - "https://code.visualstudio.com/docs/agent-customization/hooks"
+      - "https://code.visualstudio.com/docs/agents/reference/hooks-reference"
+      - "https://docs.github.com/en/copilot/reference/hooks-reference"
+      - "https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/use-hooks"
+  - id: windows_hook_runtime_prerequisite
+    classification: REQUIRES_PROTOTYPE
+    scope: "GitHub Copilot CLI Windows hook examples require PowerShell 7.0+ in PATH; this is a CLI guide prerequisite and must not be generalized to another runtime without checking."
+    local_observation: "PowerShell 7 version was not checked; no hooks were run."
+    sources:
+      - "https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/use-hooks"
+  - id: approvals
+    classification: AVAILABLE_UNTESTED
+    scope: "VS Code documents manual/assisted/allow-all permission modes for applicable harnesses and separate tool, URL, terminal, and sensitive-file approval controls; availability differs by harness."
+    local_observation: "Effective setting values and managed permission defaults not inspected."
+    sources:
+      - "https://code.visualstudio.com/docs/agents/run/approvals"
+      - "https://code.visualstudio.com/docs/enterprise/manage-ai-settings"
+  - id: agent_sandbox
+    classification: AVAILABLE_UNTESTED
+    scope: "Copilot harness sandbox is documented for terminal commands/child processes and optionally locally launched MCP/LSP servers; it is off by default, outbound network is allowed by default, and support depends on platform prerequisites."
+    local_observation: "No sandbox settings observed in the filtered user settings; effective values not inspected."
+    sources:
+      - "https://code.visualstudio.com/docs/agents/run/agent-sandboxing"
+  - id: windows_sandbox_prerequisite
+    classification: REQUIRES_PROTOTYPE
+    scope: "Documentation requires the applicable September 8, 2026 Windows security update. The local OS build was recorded, but installed update prerequisites were not checked."
+    local_observation: "Update/KB state unknown; no sandbox run attempted."
+    sources:
+      - "https://code.visualstudio.com/docs/agents/run/agent-sandboxing"
+  - id: sandbox_filesystem_network_controls
+    classification: AVAILABLE_UNTESTED
+    scope: "Documented file read/write/denied paths; network allow/deny domains and local-network settings. Network allow defaults true; sandbox is not a VM or user-account boundary."
+    local_observation: "Effective policy/settings not inspected or demonstrated."
+    sources:
+      - "https://code.visualstudio.com/docs/agents/run/agent-sandboxing"
+  - id: effective_sandbox_policy_inspection
+    classification: AVAILABLE_UNTESTED
+    scope: "Copilot harness documents the read-only /sandbox policy command, which reports execution host, sandbox state, OS implementation, and effective filesystem/network policy; it is unavailable in Local harness sessions."
+    local_observation: "Command not run because the active target is unresolved; no effective policy was observed."
+    sources:
+      - "https://code.visualstudio.com/docs/agents/run/agent-sandboxing"
+      - "https://code.visualstudio.com/docs/enterprise/manage-ai-settings"
+  - id: effective_sandbox_policy_for_this_session
+    classification: REQUIRES_PROTOTYPE
+    scope: "The effective policy in this account/window was not inspected; settings declarations alone do not demonstrate enforcement."
+    local_observation: "No sandbox policy report or denial test performed."
+    sources:
+      - "https://code.visualstudio.com/docs/agents/run/agent-sandboxing"
+  - id: mcp
+    classification: AVAILABLE_UNTESTED
+    scope: "MCP management is documented; chat.mcp.access=all and chat.mcp.gallery.enabled=true were observed in user settings, with chat.mcp.autostart=never. No server configuration or tool invocation was inspected."
+    local_observation: "No workspace MCP configuration found; no MCP server was configured or contacted."
+    sources:
+      - "https://code.visualstudio.com/docs/agents/reference/mcp-configuration"
+      - "https://code.visualstudio.com/docs/agents/run/manage-mcp-servers"
+  - id: mcp_session_sandbox
+    classification: AVAILABLE_UNTESTED
+    scope: "Copilot session sandbox can separately cover locally launched/managed MCP servers when supported and enabled; it does not establish coverage of remote MCP servers or their identity/network/access."
+    local_observation: "No MCP server configured or tested."
+    sources:
+      - "https://code.visualstudio.com/docs/agents/run/agent-sandboxing"
+      - "https://code.visualstudio.com/docs/agents/run/manage-mcp-servers"
+      - "docs/adr/0008-independent-mcp-boundary.md"
+  - id: mcp_per_server_sandbox
+    classification: UNAVAILABLE
+    scope: "VS Code documents per-server filesystem/network sandboxing for stdio MCP servers on macOS and Linux only; this environment is Windows 11."
+    local_observation: "No MCP server configured; Windows platform limitation is based on documented platform scope."
+    sources:
+      - "https://code.visualstudio.com/docs/agents/run/manage-mcp-servers"
+      - "https://code.visualstudio.com/docs/agents/reference/mcp-configuration"
+  - id: subagents
+    classification: AVAILABLE_UNTESTED
+    scope: "Documented harness-specific delegation includes Copilot harness built-in/custom subagents; autonomous delegation may occur. Restrict workers by agent configuration and tools; nested invocation has separate controls."
+    local_observation: "No subagent was enabled or invoked; session target unresolved."
+    sources:
+      - "https://code.visualstudio.com/docs/agents/run/subagents"
+      - "https://code.visualstudio.com/docs/agents/reference/custom-agent-file-reference"
+  - id: agent_skills
+    classification: AVAILABLE_UNTESTED
+    scope: "Agent Skills are documented for GitHub Copilot in VS Code. Project locations: .github/skills/, .claude/skills/, .agents/skills/; user locations: ~/.copilot/skills/, ~/.claude/skills/, ~/.agents/skills/."
+    local_observation: "No workspace skill files found; runtime loading not tested."
+    sources:
+      - "https://code.visualstudio.com/docs/agent-customization/agent-skills"
+  - id: vscode_telemetry
+    classification: AVAILABLE_UNTESTED
+    scope: "VS Code documents editor crash/error/usage telemetry settings and a local telemetry output/log surface; extensions may have separate telemetry."
+    local_observation: "Telemetry setting and logs not inspected; no telemetry export enabled."
+    sources:
+      - "https://code.visualstudio.com/docs/configure/telemetry"
+  - id: copilot_otel_monitoring
+    classification: AVAILABLE_UNTESTED
+    scope: "VS Code documents Copilot Chat OpenTelemetry traces, metrics, events, tool execution spans, requested/resolved model attributes, token usage and cache token fields when available, and connected parent/subagent traces. Actual availability/effective settings are unverified."
+    local_observation: "No OTel settings, managed telemetry policy, environment variables, or runtime state inspected; no exporter configured by this P0A work."
+    sources:
+      - "https://code.visualstudio.com/docs/agents/guides/monitoring-agents"
+      - "https://code.visualstudio.com/docs/agents/run/subagents"
+  - id: copilot_organization_usage_metrics
+    classification: REQUIRES_PROTOTYPE
+    scope: "Separate organization/enterprise usage dashboard is documented and requires the Copilot usage metrics policy and suitable administrator access."
+    local_observation: "No org dashboard or account policy inspected."
+    sources:
+      - "https://docs.github.com/en/copilot/how-tos/administer-copilot/view-usage-and-adoption"
+  - id: organization_restrictions
+    classification: REQUIRES_PROTOTYPE
+    scope: "Organization policies and VS Code managed settings are documented, but no effective policy was directly inspected."
+    local_observation: "Actual restrictions unknown; do not claim unrestricted availability."
+    sources:
+      - "https://docs.github.com/en/copilot/concepts/enterprise/policies"
+      - "https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-organization/manage-policies"
+      - "https://docs.github.com/en/copilot/reference/enterprise-administrators/enterprise-managed-settings"
+      - "https://code.visualstudio.com/docs/enterprise/manage-ai-settings"
+notes:
+  - "No local behavior was directly demonstrated; verified_claims is intentionally empty."
+  - "A classification of AVAILABLE_UNTESTED does not mean enabled, effective, or approved for operational use."
+  - "P0B must not start until the active harness is confirmed and the user separately authorizes that session."

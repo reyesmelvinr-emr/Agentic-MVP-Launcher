@@ -1,0 +1,116 @@
+schema_version: 1
+prototype: P0A
+title: Environment and Harness Inventory
+date: "2026-10-20"
+status: BLOCKED_PENDING_UI_CONFIRMATION
+scope: "Read-only local version/settings inventory and first-party documentation review; no behavior enforcement tests."
+verified_claims: []
+environment:
+  operating_system:
+    observed: "Microsoft Windows 11 Enterprise"
+    version: "10.0.22631"
+    build: "22631"
+    source: "Get-CimInstance Win32_OperatingSystem, read-only"
+  vscode:
+    version: "1.142.0"
+    commit: "6d62b1d5dace93a33b3a6d3eca1317bd5e15bcb1"
+    architecture: x64
+    source: "code --version"
+    limitation: "CLI installation may differ from the VS Code window running this session."
+  extensions:
+    github_copilot:
+      version: null
+      result: "GitHub.copilot and GitHub.copilot-chat were not listed by code --list-extensions --show-versions."
+      limitation: "Active VS Code window may use a different installation."
+    azure_github_copilot:
+      version: "1.0.244"
+      note: "Separate Azure extension; not the GitHub Copilot extension version."
+  user_settings:
+    chat.useHooks: true
+    github.copilot.chat.agent.enabled: true
+    chat.mcp.access: all
+    chat.mcp.gallery.enabled: true
+    chat.mcp.autostart: never
+    chat.agent.maxRequests: 100
+    interpretation: "User-level preferences only; not proof of effective managed policy or runtime enforcement."
+  workspace:
+    settings_file_found: false
+    local_agents_directory_found: false
+    local_hooks_directory_found: false
+    local_skills_directory_found: false
+    workspace_mcp_configuration_found: false
+session_target:
+  selected: null
+  candidate: Copilot
+  prototype_target_decision:
+    selected_surface: null
+    candidates:
+      - "VS Code local agent session"
+      - "Copilot CLI connected to VS Code"
+      - "Copilot cloud agent"
+      - "Copilot Shared harness"
+      - "Another available Session Target"
+    status: "DECISION_REQUIRED_BEFORE_P0B"
+    note: "Do not write P0B hook handlers until one target surface is explicitly selected; hook event coverage and execution environment must be verified for that surface."
+  classification: REQUIRES_PROTOTYPE
+  blocker: "Confirm the active Session Target in the VS Code UI and explicitly select the P0 prototype surface before P0B."
+capability_summary:
+  custom_agents: AVAILABLE_UNTESTED
+  explicit_tool_lists: AVAILABLE_UNTESTED
+  automatic_invocation_controls: AVAILABLE_UNTESTED
+  hooks: REQUIRES_PROTOTYPE
+  windows_hook_runtime_prerequisite: REQUIRES_PROTOTYPE
+  approvals: AVAILABLE_UNTESTED
+  sandbox_controls: AVAILABLE_UNTESTED
+  effective_sandbox_policy_inspection: AVAILABLE_UNTESTED
+  effective_sandbox_policy_for_session: REQUIRES_PROTOTYPE
+  mcp: AVAILABLE_UNTESTED
+  mcp_session_sandbox: AVAILABLE_UNTESTED
+  mcp_per_server_sandbox_on_windows: UNAVAILABLE
+  subagents: AVAILABLE_UNTESTED
+  agent_skills: AVAILABLE_UNTESTED
+  copilot_otel_monitoring: AVAILABLE_UNTESTED
+  copilot_organization_usage_dashboard: REQUIRES_PROTOTYPE
+  organization_restrictions: REQUIRES_PROTOTYPE
+telemetry:
+  availability: available_unverified
+  exporter_configured: false
+  organizational_approval: pending
+  prototype_session: P0F
+  provider_usage_telemetry_proof_session: M3A
+  inventory_only: true
+  availability_notes:
+    - "VS Code documentation describes Copilot Chat OTel traces, metrics, events, tool executions, model attributes, token usage, available cache-token fields, and connected parent/subagent traces."
+    - "Environment-level availability is not confirmed: active harness, extension version, current OTel settings, managed settings, and environment-variable configuration were not inspected."
+    - "No OTel enablement, exporter configuration, data export, or monitoring prototype was performed during P0A."
+  source: "https://code.visualstudio.com/docs/agents/guides/monitoring-agents"
+blockers:
+  - "Active harness and Session Target have not been confirmed in the VS Code UI."
+  - "P0 prototype hook target surface is undecided; no P0B hook handlers may be written until the target is selected."
+  - "The GitHub Copilot extension version in the active VS Code window has not been identified."
+  - "Organization-managed settings and applicable Copilot policies are unknown."
+  - "Windows sandbox update prerequisite and effective policy are unknown."
+classifications:
+  allowed:
+    - AVAILABLE_UNTESTED
+    - UNAVAILABLE
+    - ORGANIZATION_RESTRICTED
+    - REQUIRES_PROTOTYPE
+    - NOT_APPLICABLE
+  verified: false
+  note: "No local behavior was directly demonstrated; do not treat documentation or user settings as enforcement evidence."
+sources:
+  local_commands:
+    - "code --version"
+    - "code --list-extensions --show-versions"
+    - "Read-only Windows OS version query"
+    - "Narrow read of relevant primitive values from VS Code User settings.json"
+  documentation: "See docs/compatibility/selected-environment.md and docs/compatibility/harness-capability-matrix.yaml."
+next_recommended_session: "P0A-UI-VERIFICATION"
+prohibited_work_not_started:
+  - "Active enforcement hooks"
+  - "MCP configuration or enterprise access"
+  - "Operational agent or subagent creation/enabling"
+  - "External telemetry export"
+  - "Destructive or remote-write tests"
+  - "P0B or later prototypes"
