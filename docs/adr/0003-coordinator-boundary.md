@@ -1,0 +1,3 @@
+# Coordinator Boundary
+
+The Coordinator recommends specialists and prepares bounded task packets, while specialist invocation remains operator-directed for the initial MVP. It may recommend a model tier and request a phase transition when deterministic completion evidence is present; the State Engine alone applies valid transitions, and operator approval is required only at explicit gates. Direct specialist invocation requires a harness prototype demonstrating bounded tools, auditable invocation, and reviewable results.

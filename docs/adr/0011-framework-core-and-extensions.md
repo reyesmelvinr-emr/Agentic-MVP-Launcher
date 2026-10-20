@@ -1,0 +1,3 @@
+# Framework Core and Project Extensions
+
+The framework core contains project-independent state, task-context, validation, and enforcement contracts; project-specific objectives, integrations, risk, context, approvals, targets, and criteria belong in the project profile. Distinct project workflows may add agents or skills as extensions without changing the core, preserving reuse without forcing project behavior into generic machinery.

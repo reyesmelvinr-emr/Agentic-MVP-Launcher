@@ -1,0 +1,3 @@
+# Single-Writer State Transitions
+
+The State Engine is the sole writer of state events and the rebuildable project-state projection; agents and the Coordinator submit transition requests with an expected state version, and stale requests are rejected for explicit refresh. Invalid event history is quarantined, and runs with uncertain partial effects require operator review before resumption or closure; recovery never replays external actions.

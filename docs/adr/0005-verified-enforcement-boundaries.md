@@ -1,0 +1,3 @@
+# Verified Enforcement Boundaries
+
+Capability profiles and hooks describe intended constraints but do not independently enforce them. A restriction is treated as enforced only when a supported harness, operating-system, or external platform control is verified to block violations; consequential actions require an effective independent control, and the action is disabled when that control is unavailable.

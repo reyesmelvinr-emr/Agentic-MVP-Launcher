@@ -1,0 +1,3 @@
+# Run Status and Recovery Semantics
+
+`blocked` means a prerequisite or control prevents progress; `failed` means the task did not complete and effects are known; `needs-review` means state history or effects are uncertain; and `rolled-back` means rollback was performed and verified. Resumption after review requires operator authorization; changed scope or invalid history requires a new run, and recovery never automatically retries external actions.

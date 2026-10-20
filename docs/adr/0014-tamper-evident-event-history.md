@@ -1,0 +1,3 @@
+# Tamper-Evident Event History
+
+The event hash chain is tamper-evident only relative to a trusted checkpoint; it is not immutable storage and does not prevent an actor able to rewrite repository history from replacing the chain. The baseline protects normal writes through the State Engine and repository controls; stronger signed or external immutable checkpoints are added only when required by the organizational threat model.

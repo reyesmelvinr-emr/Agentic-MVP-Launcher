@@ -1,0 +1,3 @@
+# Version-Bound Task Context
+
+Each task packet is immutable and bound to the state version, governing profiles and policies, source context, exact scope, and completion criteria it was prepared for; changes to execution scope or controls require a new packet. Context sources declare authority by subject, while summaries remain advisory and raw logs are excluded by default; any included excerpts are bounded, source-linked, and treated as untrusted data. This keeps task authority reviewable and prevents conversational summaries or log content from silently changing scope.
