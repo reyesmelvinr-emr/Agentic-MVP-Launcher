@@ -1,12 +1,12 @@
 # P0 Verification Protocol
 
-**Status:** Normative for P0 verification after owner approval of the T0 documentation baseline.
-**Scope:** Evidence rules for P0A–P0H and lightweight guidance for later implementation work.
+**Status:** Normative for P0 verification after owner approval of the T0 documentation baseline.<br>
+**Scope:** Evidence rules for P0A–P0H and lightweight guidance for later implementation work.<br>
 **Authority:** This protocol defines verification and evidence expectations. It does not implement controls, establish product capability, authorize external actions, or advance canonical project state.
 
 ## 1. Purpose and Boundaries
 
-P0 determines what the selected Visual Studio Code and GitHub Copilot environment, plus any explicitly approved external controls, can demonstrate. It does not implement the framework. P0A is complete; preserve its historical evidence unchanged. T0 is a documentation-only readiness workstream, not a project-state milestone. P0B–P0H and M0 onward remain not started until separately authorized.
+P0 determines what the selected Visual Studio Code and GitHub Copilot environment, plus any explicitly approved external controls, can demonstrate. It does not implement the framework. P0A is complete; preserve its historical evidence unchanged. T0 is a documentation-only readiness workstream, not a project-state milestone. P0B is `AUTHORIZED_FOR_BOUNDED_EXECUTION` and may be performed in one bounded session; B0 begins the execution and includes a short setup and boundary checklist. P0C–P0H and M0 onward remain not started.
 
 The append-only transition log remains the canonical state record, the state projection is rebuildable, and the State Engine remains the sole writer of both. Test records and review results are evidence; they are not state-transition events. A Coordinator, implementation agent, or model may prepare findings but cannot accept readiness or directly change state.
 
@@ -52,7 +52,7 @@ Mutation testing is deferred until deterministic enforcement components exist an
 
 ### P0A: Environment and Harness Inventory
 
-Record the environment and harness inventory, tested versions/configuration, and evidence references. P0A is complete; do not rewrite or replace its historical evidence. If its evidence location is not available to the current task, record that as an owner input rather than reconstructing or fabricating evidence. Inventory alone does not prove enforcement.
+Record the environment and harness inventory, tested versions/configuration, and evidence references. P0A is complete; do not rewrite or replace its historical evidence. If a separate raw-evidence pointer is not available, record that as a disclosed evidence limitation and continue; do not reconstruct or fabricate missing evidence. B0 independently verifies current conditions. Inventory alone does not prove enforcement.
 
 ### P0B: Tool and Hook Coverage
 
@@ -147,6 +147,10 @@ Record any waiver separately with owner, scope, rationale, residual risk, compen
 ## 10. Compatibility Retesting
 
 Retesting is impact-based. Rerun affected P0 checks when relevant selected harness/model, hook, sandbox, operating-system/runtime, approval, identity, MCP, policy, or configuration versions change. Record changed versions/configuration, impact assessment, selected checks/results, and why other checks were excluded. Broad, unknown, or cross-cutting impact requires full P0 recertification. Do not assume a product update preserves prior behavior without evidence.
+
+For bounded P0 verification in the single-owner MVP, use a rolling environment baseline until the first probe. Exact VS Code and bundled Copilot versions remain mandatory evidence fields, but are not permanent authorization constraints. A version-only change before the first probe does not require a separate authorization addendum when all of the following remain unchanged: selected Session Target (`Copilot`); operating-system family and architecture; isolated disposable repository boundary; authorized B0–B7 scope; B8 exclusion; risk ratings; verification methods; independent oracles; expected B4 and B6 outcomes; evidence handling; prohibited actions; and stop conditions.
+
+For a qualifying pre-execution version-only update, record the previous baseline as `SUPERSEDED_BEFORE_EXECUTION`, record the current environment as the active execution baseline, and recheck the execution window in B0 against that baseline. Preserve the existing bounded-execution authorization; do not require a separate addendum. This exception applies only before the first probe. Require owner review when an environment change materially affects the Session Target or harness; hook format or discovery mechanism; supported events or control surface; execution scope or repository boundary; required privileges, identity, network, or external services; risk, method, seam, oracle, or expected result; evidence credibility; or in-progress or completed test results. Owner review is also required when the material-change assessment is inconclusive. If the change cannot be established as version-only with all listed boundaries unchanged, stop for owner review.
 
 Sanitized P0 reports belong under `docs/compatibility/` as reports are produced; do not create fabricated results or empty compatibility reports. Keep sensitive raw evidence in an owner-controlled or approved restricted location outside Git and refer to it only by a non-sensitive evidence ID.
 
