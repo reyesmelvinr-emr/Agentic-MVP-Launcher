@@ -33,9 +33,11 @@ Never commit:
 
 ## Evidence
 
-Only sanitized prototype evidence may be committed.
+Only sanitized prototype or compatibility evidence may be committed. P0 behavioral evidence and technical enforcement evidence must be reported separately. An agent refusal, compliant response, instruction, profile, or unverified hook event does not prove that a prohibited action is technically blocked.
 
-Raw evidence, raw telemetry, and sensitive logs must be stored in an approved restricted location and excluded from source control.
+Sanitized P0 compatibility reports belong under `docs/compatibility/` as results are produced; do not fabricate reports or verification results. Raw evidence, raw telemetry, and sensitive logs must be stored in an approved restricted location outside Git and excluded from source control. Reference restricted evidence only by a non-sensitive evidence ID. Never store passwords, tokens, credentials, authentication caches, or unnecessary sensitive raw evidence in Git.
+
+The current phase status is P0A complete, the T0 documentation baseline accepted, P0B–P0H not started, and framework specification and implementation not started. P0B remains blocked until the authoritative P0A evidence location or non-sensitive reference is confirmed. T0 does not advance canonical project state; the State Engine remains the sole writer of state transitions and the rebuildable projection. See the [T0 acceptance record](docs/reviews/T0_DOCUMENTATION_BASELINE_ACCEPTANCE.md), [P0 verification protocol](docs/testing/p0-verification-protocol.md), and [ADR 0016](docs/adr/0016-verification-claims-and-acceptance-authority.md).
 
 ## Security-Control Changes
 

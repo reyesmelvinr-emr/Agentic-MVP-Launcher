@@ -2,10 +2,11 @@
 
 ## Implementation Plan for GitHub Copilot and Visual Studio Code
 
-**Version:** 1.0  
-**Date:** 2026-10-20  
+**Version:** 1.1
+**Date:** 2026-10-21
 **Initial owner/operator:** Melvin Reyes  
 **Purpose:** Build a reusable, project-agnostic framework for planning and implementing small-to-medium MVP projects through supervised specialized agents, durable state, bounded context, deterministic guardrails, progress monitoring, and cost-aware model routing.
+**Change:** Added the approved documentation-only T0 verification baseline; no P0 implementation or project-state transition was started.
 
 ---
 
@@ -25,6 +26,7 @@ The architecture uses:
 - Worktrees and sandboxed execution for implementation tasks
 - Approved OpenTelemetry or available provider-/harness-exposed usage signals for token, tool, latency, and model monitoring; estimates and unavailable values are labeled ([ADR 0009](docs/adr/0009-provider-usage-telemetry.md), [ADR 0010](docs/adr/0010-audit-before-usage-telemetry.md))
 - Auto Efficiency, Balance, and Intelligence routing policies based on task risk and complexity
+- A cross-cutting verification baseline that selects methods by behavior and risk, uses approved seams and independent oracles, separates behavioral evidence from technical enforcement, and gates readiness on credible evidence ([T0 protocol](docs/testing/p0-verification-protocol.md), [ADR 0016](docs/adr/0016-verification-claims-and-acceptance-authority.md))
 
 The framework is not a replacement for GitHub permissions, Azure RBAC, Azure DevOps approvals, branch protection, pipeline environments, or human review.
 
@@ -45,6 +47,9 @@ The framework is not a replacement for GitHub permissions, Azure RBAC, Azure Dev
 11. **Deterministic scripts perform stable repetitive work; agents perform judgment-heavy work.**
 12. **Framework core, project profile, and project extensions have distinct boundaries.** The framework core contains project-independent state, task-context, validation, and enforcement contracts. Project-specific objectives, integrations, risk, context, approvals, targets, and criteria belong in the project profile. Distinct workflows may add agents or skills as project extensions without changing the core. ([ADR 0011](docs/adr/0011-framework-core-and-extensions.md))
 13. **Risk profiles can add safeguards but cannot weaken the baseline** for state integrity, explicit scope, audit, or human approval of consequential actions. The project owner classifies the project and confirms additional controls; a lower risk label is not an authorization bypass. ([ADR 0012](docs/adr/0012-risk-profiles-cannot-weaken-baseline.md))
+14. **Verification methods fit the behavior and risk.** TDD is used only where deterministic behavior, an approved observable seam, and an independent oracle make it credible; P0 capability checks use documented experiments.
+15. **Behavioral evidence is not enforcement evidence.** Instructions guide; a restriction is called enforced only when a supported technical control is verified to block violations. ([ADR 0005](docs/adr/0005-verified-enforcement-boundaries.md), [ADR 0016](docs/adr/0016-verification-claims-and-acceptance-authority.md))
+16. **Expected results are independent of the implementation under test.** Tests and reviews do not self-certify acceptance; the State Engine remains the sole writer of canonical state transitions. ([ADR 0002](docs/adr/0002-single-writer-state-transitions.md), [ADR 0016](docs/adr/0016-verification-claims-and-acceptance-authority.md))
 
 ---
 
@@ -83,6 +88,15 @@ Enforcement Plane
   - Lifecycle hooks for verified events and tools
   - External RBAC and branch/pipeline protections
   - Append-only audit events
+
+Verification Plane
+  - Requirement and risk traceability
+  - Approved seams and independent oracles
+  - Fit-for-purpose verification methods
+  - Separate review axes and evidence correlation
+  - Compatibility and regression selection
+
+The Verification Plane grants no authority and cannot advance project state.
 ```
 
 ---
@@ -148,6 +162,9 @@ docs/
 ├── decisions/
 ├── handoffs/
 ├── plans/
+├── testing/
+│   └── p0-verification-protocol.md
+├── compatibility/                 # Sanitized P0 reports as evidence is produced
 ├── runbooks/
 └── retrospectives/
 
@@ -163,6 +180,7 @@ tests/
 ├── hooks/
 ├── sandbox/
 ├── agents/
+├── fixtures/                      # Add when executable tests require fixtures
 └── scenarios/
 ```
 
@@ -289,25 +307,25 @@ Inspects repository and approved read-only external metadata. Writes findings/ev
 
 ### 6.4 Architecture and Planning Agent
 
-Produces options, ADRs, implementation plan, execution manifest, test plan, and rollback. Cannot implement.
+Produces options, ADRs, implementation plan, execution manifest, verification methods, testable acceptance criteria, proposed seams and independent oracles, and rollback. Cannot implement or weaken a control to make it easier to test.
 
 **Default model:** Intelligence.
 
 ### 6.5 Controlled Implementation Agent
 
-Makes manifest-approved changes in a sandboxed worktree; runs approved tests/builds/scans; may prepare PRs. External writes require point-of-action confirmation.
+Makes manifest-approved changes in a sandboxed worktree; runs the approved verification and tests/builds/scans; may prepare PRs. External writes require point-of-action confirmation. It cannot change its task's acceptance criteria or quality gates, weaken tests to obtain green, or self-certify acceptance.
 
 **Default model:** Intelligence.
 
 ### 6.6 Validation and Evidence Agent
 
-Correlates requirements, commit, build, artifact, deployment, tests, telemetry, and acceptance evidence. Read-only externally.
+Read-only validation that correlates requirements, commit, build, artifact, deployment, tests, telemetry, and acceptance evidence; checks evidence sufficiency and reports behavioral evidence separately from enforcement evidence. It cannot modify implementation or accept its own findings.
 
 **Default model:** Intelligence for integrated validation; Balance for deterministic evidence formatting.
 
 ### 6.7 Independent Review Agent
 
-Read-only adversarial review of proposed plans or diffs. It cannot modify authoritative artifacts.
+Read-only adversarial review of proposed plans or diffs. It reports specification conformance, engineering standards, security boundaries, and test/evidence sufficiency separately, cannot modify authoritative artifacts, and cannot silently redefine requirements.
 
 **Default model:** Intelligence for security/architecture review; Balance for routine diff review.
 
@@ -352,6 +370,8 @@ Capability profiles declare intended scope; they do not grant or reduce permissi
 
 Before live connections, the organization approves the actual integration identity topology. Use minimum required access, separate read and write identities where the platform supports meaningful separation, and prefer protected pipelines for writes. If an active identity is broader than the approved action and cannot be constrained, that action is unavailable. ([ADR 0006](docs/adr/0006-least-privilege-integration-identities.md))
 
+Verification and review activities use the same capability, identity, and sandbox boundaries as other tasks. A testing or review label grants no tools, paths, network access, identity permissions, approvals, or delegation.
+
 ### Delegation policy
 
 For the initial MVP:
@@ -394,7 +414,7 @@ contexts:
 
 ### 8.2 Task Packet
 
-Each task packet is immutable and bound to the state version, governing profiles and policies (including their versions or hashes), authoritative context sources, exact execution scope, and completion criteria for which it was prepared. It contains the objective, dependencies, allowed files/tools/targets, exclusions, model tier, outputs, tests, and requested next state. A change to execution scope or controls requires a new packet. Raw logs are excluded by default; included excerpts are bounded, source-linked, and treated as untrusted data. ([ADR 0004](docs/adr/0004-version-bound-task-context.md))
+Each task packet is immutable and bound to the state version, governing profiles and policies (including their versions or hashes), authoritative context sources, exact execution scope, and completion criteria for which it was prepared. It contains the objective, dependencies, allowed files/tools/targets, exclusions, model tier, outputs, tests, and requested next state. Material implementation tasks also identify the approved verification seam, independent oracle, selected method, acceptance threshold, and required evidence before work begins. A material change to scope, authority, control coverage, observed interface, expected behavior, threshold, or required evidence requires a revised packet; execution-neutral changes may be recorded as an addendum. P0 probes use the P0 protocol, not implementation task packets. Raw logs are excluded by default; included excerpts are bounded, source-linked, and treated as untrusted data. ([ADR 0004](docs/adr/0004-version-bound-task-context.md), [ADR 0016](docs/adr/0016-verification-claims-and-acceptance-authority.md))
 
 ### 8.3 Summarization rules
 
@@ -403,6 +423,7 @@ Each task packet is immutable and bound to the state version, governing profiles
 - Every completed run writes a structured result and concise handoff.
 - Summaries link source evidence and declare unresolved uncertainty.
 - Material context, scope, or control changes invalidate the packet and require a new packet; approval is not transferred to it. ([ADR 0004](docs/adr/0004-version-bound-task-context.md), [ADR 0007](docs/adr/0007-one-time-execution-approval.md))
+- Material verification changes follow the packet rules in §8.2. Verification evidence is separate from canonical state events and does not itself authorize a transition.
 
 ---
 
@@ -413,6 +434,8 @@ Hooks enforce only lifecycle events and tools demonstrated to pass through the s
 The State Engine is the sole writer of state events and the rebuildable projection; agents and the Coordinator submit transition requests with an expected state version, and stale requests are rejected for explicit refresh. ([ADR 0002](docs/adr/0002-single-writer-state-transitions.md))
 
 Run statuses have the following meanings: `blocked` means a prerequisite or control prevents progress; `failed` means the task did not complete and effects are known; `needs-review` means effects or state history are uncertain; and `rolled-back` means rollback was performed and its outcome verified. Resumption after review requires operator authorization. Changed scope or invalid history requires a new run, and recovery never automatically retries external actions. ([ADR 0015](docs/adr/0015-run-status-and-recovery-semantics.md))
+
+Test statuses are defined separately in the [P0 verification protocol](docs/testing/p0-verification-protocol.md); they are not run statuses or state-transition events. Evidence records correlate the applicable requirement/control, check, run and packet references, environment versions, result, and evidence location. Hooks may record test activity only for verified events/tools that pass through them; an absent hook event does not prove no activity occurred. ([ADR 0002](docs/adr/0002-single-writer-state-transitions.md), [ADR 0005](docs/adr/0005-verified-enforcement-boundaries.md))
 
 ### `sessionStart`
 
@@ -458,6 +481,8 @@ MCP servers and tools are independent execution and access boundaries, not conta
 
 ### Required tests
 
+Select sandbox checks by control claim and risk. For a critical enforcement claim, use applicable allowed-action, denied-action, bypass, fail-closed, evidence, and partial-effect recovery checks. The cases below are candidates, not claims that the selected harness supports or enforces them. Do not claim an untested boundary is enforced.
+
 - Denied home, SSH, cloud CLI, GitHub CLI, kubeconfig, and other-repository paths
 - Approved path reads/writes
 - Network deny and explicit allowlist
@@ -472,7 +497,15 @@ Prefer protected pipelines for resource-intensive builds and deployments.
 
 ---
 
-## 11. Progress Monitoring
+## 11. Framework Verification and Testing Strategy
+
+The [P0 verification protocol](docs/testing/p0-verification-protocol.md) is normative for P0 evidence and provides lightweight guidance for later implementation work. Select verification per behavior, risk, approved seam, independent oracle, and available evidence; TDD is selective and is not a P0 requirement. Critical enforcement claims require applicable allow, deny, bypass, fail-closed, evidence, and recovery checks. Test statuses are distinct from run statuses, and only `PASS` satisfies a required check.
+
+Material reviews report specification conformance, engineering standards, security boundaries, and test/evidence sufficiency as separate axes. Implementation agents cannot self-certify. For this single-owner MVP, the project owner/operator performs a separate evidence-review step and explicitly accepts P0H; this is procedural separation, not independent human or identity-level separation. A waiver cannot clear a critical P0 gap or permit specification. Only a verified external control, accepted and carried into the specification, may support `READY_FOR_SPEC_WITH_EXTERNAL_CONTROLS`. See [ADR 0016](docs/adr/0016-verification-claims-and-acceptance-authority.md).
+
+This section does not assert any unverified product capability. Detailed implementation testing procedures, machine-readable gates, schemas, broad mutation testing, and agent-evaluation infrastructure remain deferred.
+
+## 12. Progress Monitoring
 
 ### Dashboard
 
@@ -499,7 +532,7 @@ Use the VS Code Agents/session surfaces where available for active sessions. The
 
 ---
 
-## 12. Token, Cost, and Performance Monitoring
+## 13. Token, Cost, and Performance Monitoring
 
 ### Telemetry
 
@@ -528,7 +561,7 @@ Treat premium requests and billing as provider-reported values. Do not infer exa
 
 ---
 
-## 13. Auto Model Tier Policy
+## 14. Auto Model Tier Policy
 
 ### Efficiency
 
@@ -548,7 +581,7 @@ Agents cannot change tier merely to bypass a refusal or failed guardrail. Escala
 
 ---
 
-## 14. Implementation Milestones and Copilot Sessions
+## 15. Implementation Milestones and Copilot Sessions
 
 ### Pre-Specification Product-Enforcement Gate
 
@@ -560,6 +593,7 @@ P0 verifies product capabilities and produces the compatibility baseline. It
 does not implement framework components.
 
 - P0A: Environment and harness inventory
+- T0: Test Strategy, Feedback Loops, and Verification Baseline. This is an approved documentation-only readiness workstream after P0A and before substantive P0B verification, not a project-state milestone. T0 does not advance canonical state and remains incomplete until the project owner accepts the documentation handoff.
 - P0B: Tool and hook coverage
 - P0C: Sandbox enforcement
 - P0D: Approval binding and replay rejection
@@ -571,9 +605,14 @@ does not implement framework components.
 M0C-A and M0C-B occur after specification. They implement the controls whose
 feasibility was established during P0.
 
-P0H must return `READY_FOR_SPEC` before the project proceeds to specification.
-If a critical control is unsupported, replace it with an accepted external
-control or remove it from MVP scope.
+P0H returns one of `READY_FOR_SPEC`, `READY_FOR_SPEC_WITH_EXTERNAL_CONTROLS`,
+`NOT_READY_CRITICAL_CONTROL_GAP`, or `NOT_READY_INCOMPLETE_EVIDENCE`. Only the
+first two permit specification work. Any external or compensating control must
+be explicit, verified, evidenced, accepted by the project owner, and carried
+forward as a binding specification requirement. A waiver alone cannot clear a
+critical gap. Unresolved mandatory review findings map to the applicable
+not-ready outcome. P0A evidence remains unchanged; P0B–P0H and M0 onward have
+not started.
 
 ### M0A: Repository and State Foundation
 
@@ -638,14 +677,16 @@ control or remove it from MVP scope.
 
 ---
 
-## 15. Session Strategy
+## 16. Session Strategy
 
 Use one fresh Copilot session per milestone or bounded sub-milestone, not per small task. The Coordinator-generated task packet carries context. If a session exceeds budget or reaches a security boundary, stop, write a result/handoff, and create a continuation run rather than relying on chat history.
+
+Complete and accept the T0 documentation baseline before starting substantive P0B verification. P0A evidence is preserved unchanged. A separate project-owner/operator evidence-review step is required for P0H; this is procedural/session-level separation only.
 
 Initial build sessions:
 
 1. P0A-P0H: product-enforcement verification and compatibility baseline
-2. Framework specification after P0H returns `READY_FOR_SPEC`
+2. Framework specification after P0H returns either approved ready outcome and the specification is approved
 3. Approved implementation tickets
 4. M0A
 5. M0B
@@ -661,7 +702,7 @@ Initial build sessions:
 
 ---
 
-## 16. Generic Bootstrap Workflow for Future MVPs
+## 17. Generic Bootstrap Workflow for Future MVPs
 
 1. Create repository from template.
 2. Complete `PROJECT_PROFILE.yaml`.
@@ -678,7 +719,7 @@ Initial build sessions:
 
 ---
 
-## 17. MVP Exit Criteria for the Framework
+## 18. MVP Exit Criteria for the Framework
 
 - A new sample project can be bootstrapped without editing framework internals.
 - Fresh sessions recover correctly from canonical event history and its rebuildable projection.
@@ -689,12 +730,14 @@ Initial build sessions:
 - The optional read-only subagent pilot remains disabled unless separately approved; if enabled, the subagent cannot write or delegate and inherits no approval or authority.
 - Progress derives from deterministic criteria.
 - Token/tool/model data is observable where provider or harness telemetry exposes it; estimates and unavailable values are labeled. ([ADR 0009](docs/adr/0009-provider-usage-telemetry.md))
+- Critical requirements and controls have credible, traceable verification evidence; behavioral and enforcement claims are reported separately, and no control is labeled enforced without verified technical evidence.
+- Required acceptance evidence is reviewed on the four separate axes; no unresolved critical finding remains, and any accepted external control is explicit in the specification.
 - One controlled nonproduction change completes with approval, rollback, and evidence.
 - Documentation is sufficient to repeat the workflow for another MVP.
 
 ---
 
-## 18. Key Risks
+## 19. Key Risks
 
 - **Coordinator becomes overprivileged:** keep coordination tools separate from implementation.
 - **State files become inconsistent:** schema validation, state versioning, event sourcing, and the State Engine as sole writer of events and projection; stale transition requests are rejected for explicit refresh. ([ADR 0001](docs/adr/0001-event-log-as-state-source.md), [ADR 0002](docs/adr/0002-single-writer-state-transitions.md))
@@ -706,10 +749,14 @@ Initial build sessions:
 - **Framework overengineering:** implement milestones incrementally and benchmark value.
 - **Framework drift:** pin each project to a framework version and adopt later versions only through a reviewed upgrade/migration that includes compatibility and security-impact information, preserves customizations, and provides an explicit urgent-security-fix path. ([ADR 0013](docs/adr/0013-reviewed-framework-upgrades.md))
 - **Product evolution:** pin/certify supported harness versions and rerun compatibility tests after upgrades.
+- **Tautological or implementation-coupled tests:** require independent oracles and prefer approved observable seams.
+- **False red phase or test weakening:** validate the intended red failure and review test changes; do not weaken tests to obtain green.
+- **Self-certification or evidence inflation:** keep implementation separate from acceptance and prioritize credible critical-control evidence over test count.
+- **Behavior/enforcement confusion:** report agent behavior separately from verified technical or external controls.
 
 ---
 
-## 19. Framework Build Prompt
+## 20. Framework Build Prompt
 
 ### Recommended First Framework Build Prompt
 
@@ -749,7 +796,7 @@ Completion requires passing local validation, re-reading generated files, and a 
 
 ---
 
-## 20. Current Product References to Validate During Implementation
+## 21. Current Product References to Validate During Implementation
 
 - VS Code custom agents and handoffs
 - GitHub custom-agent configuration and explicit tools
@@ -761,3 +808,5 @@ Completion requires passing local validation, re-reading generated files, and a 
 - GitHub/VS Code telemetry and organizational policy
 
 Revalidate documentation before each security-sensitive milestone because preview and harness-dependent behavior can change.
+
+Compatibility retesting is impact-based: rerun affected P0 checks when relevant selected harness/model, hook, sandbox, operating-system/runtime, approval, identity, MCP, policy, or configuration versions change. Record the impact assessment and exclusions; broad, unknown, or cross-cutting impact requires full P0 recertification.

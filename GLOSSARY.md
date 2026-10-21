@@ -117,3 +117,18 @@ An isolated Git working directory for source changes. It does not isolate proces
 
 **Handoff**:
 A durable record of run status, results, evidence, and unresolved items passed between sessions or agents. It does not grant approval or transfer authorization.
+
+**Test seam**:
+A stable observable interface through which behavior can be stimulated and its result assessed.
+
+**Independent oracle**:
+A reviewed source of expected results independent of the production behavior being evaluated.
+
+**Verification evidence**:
+A record supporting a claim about observed behavior or a control, including its scope and limitations.
+
+**Behavioral evidence**:
+Evidence of how an agent or operator behaved; it does not by itself prove that a prohibited action is technically blocked.
+
+**Enforcement evidence**:
+Evidence that a supported technical control blocks an action within the tested scope; it does not establish protection outside that scope.
