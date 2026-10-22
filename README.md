@@ -1,9 +1,11 @@
 # Agentic MVP Launcher
 
-Agentic MVP Launcher is a reusable framework for planning and implementing
-small-to-medium MVP projects using GitHub Copilot and Visual Studio Code.
-
-The launcher is built around a Supervised Agent Graph with Durable Project State. It uses a low-privilege Coordinator, specialized agents, bounded task packets, deterministic state transitions, capability and identity profiles, sandboxed execution, human approval gates, local audit evidence, and persistent progress tracking.
+Agentic MVP Launcher is a reusable framework design for planning and
+implementing small-to-medium MVP projects using GitHub Copilot and Visual
+Studio Code. Its target architecture is a Supervised Agent Graph with Durable
+Project State. The framework is not yet implemented. The current P0B prototype
+has a bounded partial-verification disposition; formal framework readiness
+remains unaccepted.
 
 ## Current Status
 
@@ -11,10 +13,16 @@ The launcher is built around a Supervised Agent Graph with Durable Project State
 - Glossary and ADRs 0001 through 0016 recorded
 - Implementation plan reconciled with accepted ADRs
 - P0A environment and harness inventory complete
-- T0 documentation baseline accepted; P0B remains not started pending confirmation of the P0A evidence reference
-- P0B–P0H verification not started
+- T0 documentation baseline accepted
+- P0B started and closed by owner disposition as bounded partial verification (`INCONCLUSIVE` aggregate); no full compatibility or enforcement certification
+- P0B exact check results: B0 complete without material boundary change; B1 `PASS`; B2.1 `PASS` narrowly for one Local `UserPromptSubmit` observation; B3-D0 `EVIDENCE_GAP`; formal B3 and B4–B7 `NOT_RUN`
+- Copilot target remains `UNVERIFIED`; P0H acceptance has not occurred
+- Separately approved minimum-MVP tasks that do not depend on unverified hook behavior may proceed under the documented owner-review and synthetic-operation controls; hook enforcement is not an accepted security boundary
+- P0C–P0H verification not started
 - Framework specification not started
 - Framework implementation not started
+
+The absence of a separate raw-evidence pointer remains a disclosed evidence limitation for P0A. See the [P0B verification plan](docs/testing/P0B-verification-plan.md) for the bounded outcome, remaining unverified capabilities, and impact-based retesting limits.
 
 ## Current Authoritative Planning Documents
 

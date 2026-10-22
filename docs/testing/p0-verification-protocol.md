@@ -1,12 +1,14 @@
 # P0 Verification Protocol
 
-**Status:** Normative for P0 verification after owner approval of the T0 documentation baseline.
-**Scope:** Evidence rules for P0A–P0H and lightweight guidance for later implementation work.
+**Status:** Normative for P0 verification after owner approval of the T0 documentation baseline.<br>
+**Scope:** Evidence rules for P0A–P0H and lightweight guidance for later implementation work.<br>
 **Authority:** This protocol defines verification and evidence expectations. It does not implement controls, establish product capability, authorize external actions, or advance canonical project state.
 
 ## 1. Purpose and Boundaries
 
-P0 determines what the selected Visual Studio Code and GitHub Copilot environment, plus any explicitly approved external controls, can demonstrate. It does not implement the framework. P0A is complete; preserve its historical evidence unchanged. T0 is a documentation-only readiness workstream, not a project-state milestone. P0B–P0H and M0 onward remain not started until separately authorized.
+P0 determines what the selected Visual Studio Code and GitHub Copilot environment, plus any explicitly approved external controls, can demonstrate. It does not implement the framework. P0A is complete; preserve its historical evidence unchanged. T0 is a documentation-only readiness workstream, not a project-state milestone. P0B was started and is closed by the owner as a bounded partial-verification disposition; its aggregate protocol result is `INCONCLUSIVE`, with exact per-check statuses recorded in the [P0B verification plan](./P0B-verification-plan.md). No full compatibility or enforcement certification is claimed. P0C–P0H remain not started, and P0H acceptance has not occurred.
+
+The owner disposition permits separately approved minimum-MVP planning or implementation work that does not materially depend on unverified hook behavior, under the controls recorded in the P0B plan and implementation plan. This narrow allowance is not a P0H outcome, does not approve the framework specification or readiness, does not waive unmet capability controls, and does not change canonical project state. Formal framework specification/readiness remains subject to the P0H gate.
 
 The append-only transition log remains the canonical state record, the state projection is rebuildable, and the State Engine remains the sole writer of both. Test records and review results are evidence; they are not state-transition events. A Coordinator, implementation agent, or model may prepare findings but cannot accept readiness or directly change state.
 
@@ -52,7 +54,7 @@ Mutation testing is deferred until deterministic enforcement components exist an
 
 ### P0A: Environment and Harness Inventory
 
-Record the environment and harness inventory, tested versions/configuration, and evidence references. P0A is complete; do not rewrite or replace its historical evidence. If its evidence location is not available to the current task, record that as an owner input rather than reconstructing or fabricating evidence. Inventory alone does not prove enforcement.
+Record the environment and harness inventory, tested versions/configuration, and evidence references. P0A is complete; do not rewrite or replace its historical evidence. If a separate raw-evidence pointer is not available, record that as a disclosed evidence limitation and continue; do not reconstruct or fabricate missing evidence. B0 independently verifies current conditions. Inventory alone does not prove enforcement.
 
 ### P0B: Tool and Hook Coverage
 
@@ -144,12 +146,18 @@ A verified external or compensating control is mitigation, not a waiver. Identif
 
 Record any waiver separately with owner, scope, rationale, residual risk, compensating controls, approval date, expiry, and retest trigger. A waiver alone cannot clear a critical gap or permit specification. An expired waiver blocks readiness until renewed, replaced, or closed. Only `PASS` satisfies a required check; incomplete evidence maps to `NOT_READY_INCOMPLETE_EVIDENCE` where applicable.
 
+This formal P0H gate does not prevent the owner from separately approving a bounded minimum-MVP task that does not rely on an unverified control. Such approval is limited to that task and its compensating operating controls; it is not a waiver, P0H acceptance, a test pass, or a claim that the capability is protected by hooks.
+
 ## 10. Compatibility Retesting
 
 Retesting is impact-based. Rerun affected P0 checks when relevant selected harness/model, hook, sandbox, operating-system/runtime, approval, identity, MCP, policy, or configuration versions change. Record changed versions/configuration, impact assessment, selected checks/results, and why other checks were excluded. Broad, unknown, or cross-cutting impact requires full P0 recertification. Do not assume a product update preserves prior behavior without evidence.
+
+For bounded P0 verification in the single-owner MVP, use a rolling environment baseline until the first probe. Exact VS Code and bundled Copilot versions remain mandatory evidence fields, but are not permanent authorization constraints. In the completed P0B sequence, Local was pinned for the applicable checks; Copilot remains `UNVERIFIED` and its evidence cannot be combined with Local. Any future P0 verification requires impact assessment and applicable owner authorization; the historical B0–B7 authorization is closed by the owner disposition in the P0B plan.
+
+For a qualifying pre-execution version-only update, record the previous baseline as `SUPERSEDED_BEFORE_EXECUTION`, record the current environment as the active execution baseline, and recheck the execution window in B0 against that baseline. Preserve the existing bounded-execution authorization; do not require a separate addendum. This exception applies only before the first probe. Require owner review when an environment change materially affects the Session Target or harness; hook format or discovery mechanism; supported events or control surface; execution scope or repository boundary; required privileges, identity, network, or external services; risk, method, seam, oracle, or expected result; evidence credibility; or in-progress or completed test results. Owner review is also required when the material-change assessment is inconclusive. If the change cannot be established as version-only with all listed boundaries unchanged, stop for owner review.
 
 Sanitized P0 reports belong under `docs/compatibility/` as reports are produced; do not create fabricated results or empty compatibility reports. Keep sensitive raw evidence in an owner-controlled or approved restricted location outside Git and refer to it only by a non-sensitive evidence ID.
 
 ## 11. Lightweight M0 Guidance
 
-After P0H and specification approval, material M0 tasks should use the packet-bound method, seam, oracle, threshold, and evidence rules above. Prefer focused deterministic checks and durable regression coverage for implemented critical controls. Detailed M0 procedures, schemas, machine-enforced gates, a full test catalog, broad mutation testing, and agent-evaluation infrastructure remain deferred unless approved requirements or demonstrated risks justify them. Do not change the M0A build prompt before P0H and specification approval.
+Formal framework specification and readiness, and any implementation capability that materially relies on an unverified hook behavior, remain gated on the applicable P0H decision and control evidence. Separately approved minimum-MVP tasks that do not rely on those behaviors may proceed before P0H using immutable task packets bound to scope, method, seam, oracle, threshold, and evidence. Such work retains owner review, bounded sessions, synthetic data, isolation where appropriate, no production or external writes, diff review, explicit approval for consequential actions, and State Engine validation for canonical state once implemented. It must not claim hook enforcement or weaken any security boundary. Prefer focused deterministic checks and durable regression coverage for implemented critical controls. Detailed M0 procedures, schemas, machine-enforced gates, a full test catalog, broad mutation testing, and agent-evaluation infrastructure remain deferred unless approved requirements or demonstrated risks justify them.

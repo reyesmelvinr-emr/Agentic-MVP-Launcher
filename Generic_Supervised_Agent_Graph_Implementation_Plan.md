@@ -607,12 +607,33 @@ feasibility was established during P0.
 
 P0H returns one of `READY_FOR_SPEC`, `READY_FOR_SPEC_WITH_EXTERNAL_CONTROLS`,
 `NOT_READY_CRITICAL_CONTROL_GAP`, or `NOT_READY_INCOMPLETE_EVIDENCE`. Only the
-first two permit specification work. Any external or compensating control must
-be explicit, verified, evidenced, accepted by the project owner, and carried
-forward as a binding specification requirement. A waiver alone cannot clear a
-critical gap. Unresolved mandatory review findings map to the applicable
-not-ready outcome. P0A evidence remains unchanged; P0B–P0H and M0 onward have
-not started.
+first two permit formal framework specification/readiness. Any external or
+compensating control must be explicit, verified, evidenced, accepted by the
+project owner, and carried forward as a binding specification requirement. A
+waiver alone cannot clear a critical gap. Unresolved mandatory review findings
+map to the applicable not-ready outcome. P0A evidence remains unchanged. P0B
+was started and is closed by the owner as bounded partial verification;
+P0C–P0H remain not started, and P0H acceptance has not occurred.
+
+The owner has decided that the minimum MVP may proceed without hook enforcement
+as a security boundary. This does not create a P0H outcome or clear the formal
+specification/readiness gate. Separately approved, bounded minimum-MVP planning
+or implementation tasks may proceed before P0H only when they do not materially
+depend on unverified hook behavior, use task packets with explicit scope and
+acceptance evidence, and retain owner review, bounded sessions, synthetic data,
+isolation where appropriate, no production or external writes, diff review,
+explicit approval for consequential actions, and State Engine validation for
+canonical state when implemented. No unverified behavior may be represented as
+`ENFORCED`. Capabilities depending on hook-based restriction, denial,
+fail-closed behavior, lifecycle correlation, or unverified target coverage
+remain disabled, owner-gated, or separately validated before use.
+
+This allowance is not a blanket start authorization. A specific M0 task must
+identify whether it depends on any unverified control and remain within the
+approved minimum-MVP boundary. M0C-A enforcement, audit, and approval-dependent
+operational specialist gates remain in force; no operational specialist may
+begin before the applicable local audit, approval, and verified policy/sandbox
+denial/failure controls pass.
 
 ### M0A: Repository and State Foundation
 
@@ -629,7 +650,7 @@ not started.
 **Tier:** Intelligence  
 **Deliverables:** policy engine, verified-coverage harness adapter, local append-only audit events and local audit-event schema, approval prototype, and lifecycle/tool enforcement tests. ([ADR 0005](docs/adr/0005-verified-enforcement-boundaries.md), [ADR 0010](docs/adr/0010-audit-before-usage-telemetry.md))
 
-**Gate:** No operational specialist before local audit, approval, and verified policy/sandbox enforcement denial/failure tests pass. Local audit is required before specialist work; optional provider token, model, or cost telemetry is not a prerequisite for read-only fixture work. This milestone does not prove provider token or model telemetry. ([ADR 0005](docs/adr/0005-verified-enforcement-boundaries.md), [ADR 0010](docs/adr/0010-audit-before-usage-telemetry.md))
+**Gate:** No operational specialist before local audit, approval, and verified policy/sandbox enforcement denial/failure tests pass. This gate is not waived by the bounded minimum-MVP allowance. Local audit is required before specialist work; optional provider token, model, or cost telemetry is not a prerequisite for read-only fixture work. This milestone does not prove provider token or model telemetry. ([ADR 0005](docs/adr/0005-verified-enforcement-boundaries.md), [ADR 0010](docs/adr/0010-audit-before-usage-telemetry.md))
 
 ### M0C-B: Sandbox, Identity, and MCP-Boundary Prototype
 
@@ -683,7 +704,18 @@ Use one fresh Copilot session per milestone or bounded sub-milestone, not per sm
 
 Complete and accept the T0 documentation baseline before starting substantive P0B verification. P0A evidence is preserved unchanged. A separate project-owner/operator evidence-review step is required for P0H; this is procedural/session-level separation only.
 
-Initial build sessions:
+The sequence below describes the formal framework build. The owner’s bounded
+P0B closure does not require completing B3–B7 before beginning the minimum MVP.
+Before formal P0H acceptance, the owner may separately approve a minimum-MVP
+planning or implementation task only when its task packet shows that it does
+not materially depend on unverified hook behavior and preserves the controls
+and exclusions in §15. This narrow lane does not start the full framework
+specification, accept readiness, or permit M0C-A/M0C-B enforcement-dependent
+or operational-specialist work. The owner’s immediate next step is to define
+and approve the exact bounded minimum-MVP task packet; implementation is not
+authorized by this plan paragraph alone.
+
+Formal framework build sequence:
 
 1. P0A-P0H: product-enforcement verification and compatibility baseline
 2. Framework specification after P0H returns either approved ready outcome and the specification is approved

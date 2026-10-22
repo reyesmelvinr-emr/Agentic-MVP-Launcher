@@ -51,13 +51,13 @@ No compatibility reports, P0 results, test schemas, fixtures, executable tests, 
 
 **Security and authority boundaries:** Pass. No enforcement is inferred from behavioral evidence, no unverified product feature is asserted, sensitive raw evidence remains outside Git, MCP remains conditional, and the State Engine remains the sole writer of canonical transitions and the projection.
 
-**Test and evidence sufficiency:** Pass for the documentation baseline only. The protocol defines statuses, claim classifications, minimum evidence, independent-oracle rules, reviews, waivers, and compatibility triggers. This does not establish P0B–P0G product behavior or enforcement. The P0A evidence location still requires owner confirmation.
+**Test and evidence sufficiency:** Pass for the documentation baseline only. The protocol defines statuses, claim classifications, minimum evidence, independent-oracle rules, reviews, waivers, and compatibility triggers. This does not establish P0B–P0G product behavior or enforcement. Existing P0A repository records remain historical evidence; a separate raw-evidence pointer is a disclosed limitation, not a current gate on P0B.
 
 ## Unresolved Items and Owner Inputs
 
-- T0 documentation acceptance is recorded. Do not start substantive P0B verification until the authoritative P0A evidence location or non-sensitive reference is confirmed.
+- T0 documentation acceptance is recorded. P0B is not started and no substantive P0B verification is executed in this documentation-only session.
 - Confirm the selected harness and versions, approved restricted-evidence location, whether MCP is required, and risk classifications for individual P0 checks.
-- Identify the location/reference for the historical P0A inventory evidence. No copy was created or reconstructed.
+- Record the historical P0A inventory evidence as a limitation if no separate raw pointer is available; do not reconstruct or fabricate it.
 - Re-run an automated local-link check if required by the project owner; the attempted scripted check was inconclusive.
 
 ## Stop Conditions
@@ -67,7 +67,7 @@ No compatibility reports, P0 results, test schemas, fixtures, executable tests, 
 - P0B–P0H and M0 onward remain not started.
 - No project-state transition occurred; canonical state was not changed.
 - Historical P0A evidence remains unchanged.
-- P0B remains blocked until the P0A evidence reference is confirmed.
+- A missing raw-evidence pointer is a disclosed limitation; it does not by itself block P0B when B0 independently verifies current conditions.
 
 ## Recommended Next P0B Preparation Prompt
 
@@ -75,7 +75,8 @@ No compatibility reports, P0 results, test schemas, fixtures, executable tests, 
 Prepare, but do not execute, the P0B tool and hook coverage verification.
 Read the implementation plan, docs/testing/p0-verification-protocol.md, ADRs 0001–0016, this handoff, and the authoritative P0A inventory/evidence.
 First confirm that the project owner accepted the T0 documentation baseline and identify the selected harness, versions, configuration, and approved evidence location.
-If T0 acceptance or authoritative P0A evidence is unavailable, stop and report the blocker; do not reconstruct evidence or begin P0B.
+If T0 acceptance is unavailable or a material boundary change is found, stop and report the blocker; do not reconstruct evidence or begin P0B.
+Record the lack of a separate raw-evidence pointer as a disclosed limitation, but do not treat it as a block by itself.
 Propose bounded P0B checks with expected results, behavioral/enforcement claim classifications, independent oracles, evidence references, and limitations.
 Do not perform checks, change configuration, access external systems, create compatibility results, modify canonical state, or mark any phase complete.
 ```
