@@ -2,16 +2,37 @@
 
 **Owner authorization decision:** `GRANTED_WITH_BOUNDED_PRECONDITIONS` (recorded; scope unchanged)  
 **Current execution disposition:** `AUTHORIZED_FOR_BOUNDED_EXECUTION`  
-**Material-change disposition:** `PROVISIONAL_NO_MATERIAL_CHANGE`  
+**Initial material-change disposition:** `PROVISIONAL_NO_MATERIAL_CHANGE` (historical; permitted B0–B1 only)<br>
+**Current material-change result:** B0 completed without a material boundary change.<br>
 **Current rolling baseline:** `P0B-ENV-002`  
 **Authorized by:** Project owner (authorization directed in the task request)  
 **Authorization date:** 2026-10-21  
 **Authorized scope:** P0B checks B0–B7 only, subject to the requirements and preconditions below.  
-**Operational phase status:** P0B remains `NOT_STARTED`.
+**Operational phase status at original authorization:** `NOT_STARTED` (historical, 2026-10-21).
+
+### Owner decision amendment (2026-10-22)
+
+The project owner authorizes both the VS Code Local and Copilot Session Targets for bounded P0B verification within the existing disposable, remote-free, synthetic fixture.
+
+- Local is the primary MVP verification target.
+- One target is pinned per runtime check.
+- The corresponding target-specific contract must be used.
+- Evidence cannot be combined across targets.
+- A target change between checks is allowed without reauthorization.
+- A target change during an active check stops that check.
+- Untested targets remain `UNVERIFIED`.
+- Existing boundaries remain unchanged.
+- This does not authorize cloud, MCP, external services, user hooks, policy hooks, or broader access.
+
+For the current P0B sequence: B2 target is Local; B3-D0 is `NOT_RUN` with Local pinned; formal B3 is planned for Local and remains `NOT_RUN`; Copilot remains `UNVERIFIED`.
+
+### Current execution update (2026-10-22)
+
+P0B is `STARTED`. B0 completed without a material boundary change. B1 is `PASS` for the applicable Local discovery/configuration contract. The overall original B2 lifecycle matrix remains `NOT_RUN` because it is incomplete; B2.1, the scoped Local `UserPromptSubmit` discovery/invocation observation, is `PASS`. B3-D0 and formal B3 are `NOT_RUN`; B4–B7 are `NOT_RUN`. The current pinned target is Local. Copilot is authorized but remains `UNVERIFIED`. Temporary B2 Local hook configuration, logger, and fixture-local evidence exist only in the authorized disposable fixture. The final sanitized compatibility report does not yet exist, and P0H is not ready. No canonical project-state transition is claimed.
 
 ## 1. Authority and effect
 
-This record authorizes only the bounded P0B activity defined in the [P0B verification plan](../testing/P0B-verification-plan.md). P0B B0–B7 may be performed in one bounded session. Beginning B0 may be recorded as P0B's operational start. That operational start does not itself create a canonical state transition. This authorization does not mean P0B has already started or completed, authorize activity outside its check scope, establish product capability or enforcement, manually change canonical project state, or append a state-transition event.
+This record authorizes only the bounded P0B activity defined in the [P0B verification plan](../testing/P0B-verification-plan.md). P0B B0–B7 may be performed in one bounded session for a pinned target. At the time of the original authorization, P0B had not started; subsequent execution status is recorded in the current execution update above and the verification plan. Beginning B0 does not itself create a canonical state transition. This authorization does not authorize activity outside its check scope, establish product capability or enforcement, manually change canonical project state, or append a state-transition event.
 
 The [P0 verification protocol](../testing/p0-verification-protocol.md) remains normative. This authorization does not override its status, evidence, claim-classification, independent-oracle, or owner-review requirements. No check result is recorded by this authorization.
 
@@ -58,12 +79,13 @@ The baseline confirmed when this authorization was recorded is `P0B-ENV-001`, hi
 | `@github/copilot` | `1.0.100-1` |
 | `@github/copilot-sdk` | `1.0.23-preview.5` |
 | Operating system | `Windows_NT`, `x64`, version `10.0.22631` |
-| Owner-observed Session Target | `Copilot`; `CONFIRMED` |
-| Execution-window Session Target recheck | `Copilot`; `PENDING_B0_CHECK` |
+| Authorized bounded Session Targets | `Local` (primary MVP verification target) and `Copilot` (authorized alternate target; one target pinned per runtime check) |
+| Owner-observed Session Target | `Copilot`; `CONFIRMED` (historical owner-observed fact; not the active target selection for current B2/B3-D0/B3 work) |
+| B0 execution-window Session Target | `Local`; confirmed for the current sequence; `Copilot` remains separately authorized and `UNVERIFIED` |
 
-VS Code architecture is `x64` (`CONFIRMED`). Release channel is `NOT_SEPARATELY_REPORTED`; do not infer it from user-setup wording. Exact VS Code and bundled Copilot versions remain mandatory evidence fields, but are not permanent authorization constraints. ENV-002 is the current rolling baseline for B0 recheck. Its execution-window target recheck remains pending; stop if it differs from Copilot.
+VS Code architecture is `x64` (`CONFIRMED`). Release channel is `NOT_SEPARATELY_REPORTED`; do not infer it from user-setup wording. Exact VS Code and bundled Copilot versions remain mandatory evidence fields, but are not permanent authorization constraints. ENV-002 is the active execution baseline for the current Local sequence: B0 confirmed Local and completed without a material boundary change. Local is the primary target, not a permanent global target. A target change between checks is allowed without reauthorization, but a target change during an active check stops that check and requires restart or the applicable incomplete protocol status. A target outside the authorized Local/Copilot family is a stop condition.
 
-A version-only change before the first probe does not require a separate authorization addendum when the Session Target is confirmed as Copilot and the operating-system family and architecture, isolated disposable repository boundary, authorized B0–B7 scope, B8 exclusion, owner-approved risk ratings, verification methods, independent oracles, expected B4 and B6 outcomes, evidence handling, prohibited actions, and stop conditions all remain unchanged. Record the previous baseline as `SUPERSEDED_BEFORE_EXECUTION`, record the current baseline, and recheck the execution window in B0. Owner review is required for material or inconclusive changes as described in §8. The assessment is `PROVISIONAL_NO_MATERIAL_CHANGE`, permitting B0 and B1 only. This record does not authorize work beyond its existing bounded scope.
+The original pre-first-probe version-change rule applied to the baseline before the first probe. For subsequent checks, a version-only change does not require a separate authorization addendum only when the authorized target family, one-target-per-check pin, operating-system family and architecture, isolated disposable repository boundary, B0–B7 scope, B8 exclusion, owner-approved risk ratings, verification methods, independent oracles, expected B4/B6 outcomes, evidence handling, prohibitions, and stop conditions remain unchanged. Record superseded and current baselines; stop for owner review when a change is material or inconclusive. The original `PROVISIONAL_NO_MATERIAL_CHANGE` disposition permitted B0 and B1 only; B0–B1 have since completed without a material boundary change. Later checks may proceed only according to their individual prerequisites and this bounded authorization.
 
 ## 3. Authorized checks and risk classifications
 
@@ -73,8 +95,9 @@ Only the following checks are authorized, with the names, scope, methods, indepe
 |---|---|---|
 | B0 | Confirm the approved fixture boundary and relevant policy restrictions against the current rolling baseline. | Low |
 | B1 | Establish the hook discovery and configuration contract through read-only review. | Low |
-| B2 | Observe core lifecycle coverage using the plan's synthetic prompt, harmless synthetic-file read, deliberate nonexistent synthetic fixture-path read failure, and session end. | Medium |
-| B3 | Determine allowed-tool traversal and result visibility using harmless read-only tool action(s) against synthetic fixture content. | Low |
+| B2 | Observe lifecycle coverage in scoped sub-observations. B2.1 Local `UserPromptSubmit` discovery/invocation is `PASS`; remaining lifecycle observations are `NOT_RUN`. | Medium |
+| B3-D0 | One bounded owner-assisted Local runtime discovery read, as defined in the plan. It is preparatory under B3 and not B3 PASS evidence. | Low |
+| B3 | Determine allowed-tool traversal and result visibility using harmless read-only tool action(s) against synthetic fixture content. Formal B3 is planned for Local and remains `NOT_RUN` after B3-D0. | Low |
 | B4 | Test the explicitly configured pre-tool denial against the harmless synthetic sentinel write, only in the disposable local repository. | Medium |
 | B5 | Test one alternate tool/path for the same harmless fixture write only under the conditional authorization in §4. | Medium |
 | B6 | Observe controlled nonzero hook-command failure before the harmless synthetic sentinel write, only in the disposable local repository. | Medium |
@@ -90,11 +113,11 @@ B5 remains in the existing bounded B0–B7 scope only when the exact harmless al
 
 All behavioral checks must use an **isolated, disposable local Git repository** outside this project, any real work repository, and any remote/cloud repository.
 
-### B0 setup and boundary checklist
+### B0 setup and boundary checklist (procedure and completed result)
 
-B0 is the short setup and boundary checklist for the current execution window. It checks only:
+B0 was the short setup and boundary checklist for the current execution window and is complete without a material boundary change. Its scope was limited to:
 
-1. The current Copilot execution target and relevant harness/version facts.
+1. The current authorized Session Target and relevant harness/version facts; Local was confirmed for the current sequence.
 2. The disposable repository is outside this project.
 3. The fixture has no remote.
 4. The fixture contains synthetic data only.
@@ -103,11 +126,11 @@ B0 is the short setup and boundary checklist for the current execution window. I
 7. Sensitive raw evidence remains outside Git when such evidence is retained.
 8. The existing B0–B7 authorization still matches the target, authority, risk, scope, oracle, and expected external effects.
 
-Stop only for a genuine unsafe fixture, target mismatch, material scope or authority change, changed external effects, changed risk, invalid oracle, or evidence-credibility problem.
+For future checks, stop only for a genuine unsafe fixture, a target outside the authorized Local/Copilot family, material scope or authority change, changed external effects, changed risk, invalid oracle, or evidence-credibility problem. A target change between checks is allowed without reauthorization; a change during a check stops that check.
 
 P0A evidence disposition: existing repository artifacts remain historical evidence. No missing raw pointer may be reconstructed or fabricated; if a separate raw pointer is unavailable, it is recorded as a disclosed evidence limitation and does not by itself block P0B. B0 independently verifies current conditions.
 
-B0 does not create hook configuration, invoke a hook, perform a test write, or assign a result to B0–B7. Fixture creation may occur during B0 execution later, but it is not a separate gate. A material or unsafe condition requires `BLOCKED_PENDING_OWNER_REVIEW` and no further B0–B7 check until the issue is resolved.
+B0 did not create hook configuration, invoke a hook, or perform a test write; it completed the boundary checklist and confirmed Local without a material boundary change. Fixture creation, if needed in a future execution, is not a separate gate. A material or unsafe condition requires `BLOCKED_PENDING_OWNER_REVIEW` and no further check until the issue is resolved.
 
 ### P0B check gates
 
@@ -178,7 +201,7 @@ Require owner review if an environment change materially affects the Session Tar
 
 ## 9. Evidence handling and acceptance limitation
 
-The project owner is the raw-evidence custodian. Keep sensitive raw evidence outside Git in the approved owner-controlled/restricted location and reference it only by a non-sensitive evidence ID; the exact location remains a pre-probe prerequisite. Do not include absolute local paths, usernames, corporate folder structures, secrets, authentication caches, real prompts, unnecessary host/repository identifiers, or unrelated environment data in Git. Sanitize hook input/output, tool results, process output, timestamps/correlation data, fixture before/after state, and failure/partial-effect evidence while preserving enough information for expected-versus-actual review and independent-oracle comparison. Preserve P0A evidence unchanged; existing repository P0A artifacts are accepted, with no separate raw reference currently available.
+The project owner is the raw-evidence custodian. Sensitive B2 fixture-local evidence remains outside the governing repository; no sensitive evidence is committed. The evidence has not yet been converted into the final sanitized compatibility report. If a repository report needs to reference retained raw evidence, use a non-sensitive evidence ID; do not invent one or include absolute local paths, usernames, corporate folder structures, secrets, authentication caches, real prompts, unnecessary host/repository identifiers, or unrelated environment data. Sanitize hook input/output, tool results, process output, timestamps/correlation data, fixture before/after state, and failure/partial-effect evidence while preserving enough information for expected-versus-actual review and independent-oracle comparison. Preserve P0A evidence unchanged; existing repository P0A artifacts are accepted, with no separate raw reference currently available.
 
 Individual checks receive statuses only after execution in accordance with the P0 protocol. `PASS` requires the expected result and sufficient independent evidence; `FAIL` requires the contrary result and understood effects; `BLOCKED`, `INCONCLUSIVE`, `NOT_RUN`, and `NOT_APPLICABLE` retain their protocol meanings. Non-pass statuses do not imply success. An observed compliant response alone is not enforcement evidence. Do not self-certify or accept P0H readiness.
 
@@ -186,9 +209,9 @@ For this single-owner MVP, the project owner/operator performs a separate eviden
 
 ## 10. Authorization record
 
-**Decision:** The project owner authorized bounded P0B execution for B0–B7 only, under the conditions and prohibitions in this record and the authoritative P0B plan. B0–B1 are the first authorized checks; B0 begins P0B operationally when the current environment and fixture boundary are confirmed in the B0 checklist. B2–B4, B6, and B7 are gated by sufficient B0–B1 evidence; their minimum plan-defined fixture-local hook configuration requires no additional approval once B0–B1 establish the contract. B5 is executed only when the exact harmless alternate tool/path is already known and remains strictly fixture-local; otherwise it stays `NOT_RUN` or `NOT_APPLICABLE` and `UNVERIFIED`. B8 is excluded and `NOT_APPLICABLE`. Risks and B4/B6 expected outcomes are owner-approved as stated in §§3 and 6. The rolling-baseline policy allows qualifying pre-probe version-only updates without a separate authorization addendum. The current disposition is `AUTHORIZED_FOR_BOUNDED_EXECUTION` with `PROVISIONAL_NO_MATERIAL_CHANGE`, allowing B0 and B1 only. P0B remains `NOT_STARTED` until B0 begins.
+**Original decision (2026-10-21):** The project owner authorized bounded P0B execution for B0–B7 only, under the conditions and prohibitions in this record and the authoritative P0B plan. B0–B1 were the first authorized checks; B0 was the execution-window boundary check. B2–B4, B6, and B7 required sufficient B0–B1 evidence; their minimum plan-defined fixture-local hook configuration required no additional approval once B0–B1 established the contract. B5 was conditional on an already-known harmless alternate tool/path remaining strictly fixture-local. B8 was excluded and `NOT_APPLICABLE`. Risks and B4/B6 expected outcomes were owner-approved as stated in §§3 and 6. The initial `PROVISIONAL_NO_MATERIAL_CHANGE` disposition permitted B0 and B1 only. These were prospective authorization terms at the time, not a statement of current execution status.
 
 **Authorized by:** Project owner (authorization directed in the task request)<br>
 **Date:** 2026-10-21
 
-This authorization is prospective and conditional. Begin with B0 and complete the short setup and boundary checklist before the first probe. B0 is not a separate administrative gate; it is the current execution-window verification step. Authorization does not mean P0B has already started or that any check has been executed.
+This authorization was prospective and conditional when granted. B0 and B1 have since completed without a material boundary change. Later checks may proceed according to their individual prerequisites; B3-D0 is the next planned bounded activity. No later check is automatically ready by this statement. Current results are recorded in the execution update above and the [P0B verification plan](../testing/P0B-verification-plan.md).
