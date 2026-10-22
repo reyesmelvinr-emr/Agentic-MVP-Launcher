@@ -1,7 +1,7 @@
 # P0B Bounded Execution Authorization
 
 **Owner authorization decision:** `GRANTED_WITH_BOUNDED_PRECONDITIONS` (recorded; scope unchanged)  
-**Current execution disposition:** `AUTHORIZED_FOR_BOUNDED_EXECUTION`  
+**Current execution disposition:** Bounded execution phase closed by owner proportionality disposition; see §11. Historical authorization remains recorded, with no new probe authorized by this closure.<br>
 **Initial material-change disposition:** `PROVISIONAL_NO_MATERIAL_CHANGE` (historical; permitted B0–B1 only)<br>
 **Current material-change result:** B0 completed without a material boundary change.<br>
 **Current rolling baseline:** `P0B-ENV-002`  
@@ -24,15 +24,15 @@ The project owner authorizes both the VS Code Local and Copilot Session Targets 
 - Existing boundaries remain unchanged.
 - This does not authorize cloud, MCP, external services, user hooks, policy hooks, or broader access.
 
-For the current P0B sequence: B2 target is Local; B3-D0 is `NOT_RUN` with Local pinned; formal B3 is planned for Local and remains `NOT_RUN`; Copilot remains `UNVERIFIED`.
+For the current P0B sequence at the time of this authorization amendment: B2 target is Local; B3-D0 was authorized with Local pinned; formal B3 remained `NOT_RUN`; Copilot remained `UNVERIFIED`. The later B3-D0 attempt result and owner proportionality closure are recorded in §11 and the [P0B verification plan](../testing/P0B-verification-plan.md).
 
-### Current execution update (2026-10-22)
+### Execution snapshot (2026-10-22; superseded by §11 owner closure)
 
-P0B is `STARTED`. B0 completed without a material boundary change. B1 is `PASS` for the applicable Local discovery/configuration contract. The overall original B2 lifecycle matrix remains `NOT_RUN` because it is incomplete; B2.1, the scoped Local `UserPromptSubmit` discovery/invocation observation, is `PASS`. B3-D0 and formal B3 are `NOT_RUN`; B4–B7 are `NOT_RUN`. The current pinned target is Local. Copilot is authorized but remains `UNVERIFIED`. Temporary B2 Local hook configuration, logger, and fixture-local evidence exist only in the authorized disposable fixture. The final sanitized compatibility report does not yet exist, and P0H is not ready. No canonical project-state transition is claimed.
+At this snapshot, P0B was `STARTED`. B0 completed without a material boundary change. B1 was `PASS` for the applicable Local discovery/configuration contract. The overall original B2 lifecycle matrix remained `NOT_RUN` because it was incomplete; B2.1, the scoped Local `UserPromptSubmit` discovery/invocation observation, was `PASS`. B3-D0 and formal B3 were then recorded `NOT_RUN`; B4–B7 were `NOT_RUN`. The pinned target was Local. Copilot was authorized but remained `UNVERIFIED`. Temporary B2 Local hook configuration, logger, and fixture-local evidence existed only in the authorized disposable fixture. The final sanitized compatibility report did not yet exist, and P0H was not ready. No canonical project-state transition was claimed. The later B3-D0 outcome and current owner closure are recorded in §11 and the [P0B verification plan](../testing/P0B-verification-plan.md).
 
 ## 1. Authority and effect
 
-This record authorizes only the bounded P0B activity defined in the [P0B verification plan](../testing/P0B-verification-plan.md). P0B B0–B7 may be performed in one bounded session for a pinned target. At the time of the original authorization, P0B had not started; subsequent execution status is recorded in the current execution update above and the verification plan. Beginning B0 does not itself create a canonical state transition. This authorization does not authorize activity outside its check scope, establish product capability or enforcement, manually change canonical project state, or append a state-transition event.
+This record historically authorized only the bounded P0B activity defined in the [P0B verification plan](../testing/P0B-verification-plan.md). P0B B0–B7 could be performed in one bounded session for a pinned target. At the time of the original authorization, P0B had not started; subsequent execution status is recorded in the execution snapshot above and the verification plan. The owner closure in §11 ends the current prototype and does not authorize further probes. Beginning B0 does not itself create a canonical state transition. This authorization does not authorize activity outside its check scope, establish product capability or enforcement, manually change canonical project state, or append a state-transition event.
 
 The [P0 verification protocol](../testing/p0-verification-protocol.md) remains normative. This authorization does not override its status, evidence, claim-classification, independent-oracle, or owner-review requirements. No check result is recorded by this authorization.
 
@@ -214,4 +214,12 @@ For this single-owner MVP, the project owner/operator performs a separate eviden
 **Authorized by:** Project owner (authorization directed in the task request)<br>
 **Date:** 2026-10-21
 
-This authorization was prospective and conditional when granted. B0 and B1 have since completed without a material boundary change. Later checks may proceed according to their individual prerequisites; B3-D0 is the next planned bounded activity. No later check is automatically ready by this statement. Current results are recorded in the execution update above and the [P0B verification plan](../testing/P0B-verification-plan.md).
+This authorization was prospective and conditional when granted. B0 and B1 have since completed without a material boundary change. Historical authorization terms do not indicate current readiness for an unrun check. Current results are recorded in the execution update above and the [P0B verification plan](../testing/P0B-verification-plan.md).
+
+## 11. Owner proportionality closure (2026-10-22)
+
+The owner concludes the current P0B prototype after B0 completion, B1 `PASS`, and B2.1 `PASS`, while recording B3-D0 attempt 001 as `EVIDENCE_GAP`. The owner-visible synthetic marker was returned, but no persisted `PreToolUse`/`PostToolUse` runtime evidence or contemporaneous after-state record was available; no Local read-tool contract was established. Formal B3 and B4–B7 remain `NOT_RUN`, Copilot remains `UNVERIFIED`, no enforcement claim is made, and P0H acceptance has not occurred.
+
+The owner accepts that the MVP may proceed with a minimum initial implementation that does not use hook enforcement as a security boundary. Hook-dependent capabilities remain disabled, explicitly owner-gated, or separately validated before use. The current prototype is closed as a bounded partial-verification outcome, not a full compatibility or enforcement certification. Retesting is impact-based when a planned capability materially depends on a specific unverified hook behavior.
+
+This is an owner disposition, not a new test status, a new execution authorization, an authorization amendment for further probes, a waiver of a critical control, acceptance of P0H, or a canonical project-state transition. The exact per-check statuses, minimum-MVP operating controls, deferred capabilities, and P0H boundary are maintained in the P0B verification plan. This disposition does not weaken the prohibitions or boundaries in this authorization.
